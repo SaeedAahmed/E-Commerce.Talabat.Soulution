@@ -1,5 +1,5 @@
 using AutoMapper;
-using E_Commerce.APIs.Profiles;
+using E_Commerce.APIs.Helpers.Profiles;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Repository.Data;
 using E_Commerce.Repository.Repositories;
@@ -54,6 +54,7 @@ namespace E_Commerce.APIs
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.MapControllers();
 
             app.UseAuthorization();
