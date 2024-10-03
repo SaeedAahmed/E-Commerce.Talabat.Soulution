@@ -1,6 +1,8 @@
 ﻿using E_Commerce.Core.Entities;
 using E_Commerce.Core.Repositories.Contract;
+using E_Commerce.Core.Specifications;
 using E_Commerce.Repository.Data;
+using E_Commerce.Repository.GetQuery;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,20 +22,20 @@ namespace E_Commerce.Repository.Repositories
         }
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            if(typeof(T) == typeof(Product))
-            {
-                return (IEnumerable<T>) await _dbContext.Set<Product>().Include(P => P.ProductBrand).Include(P => P.ProductType).ToListAsync();
-            }
             return await _dbContext.Set<T>().ToListAsync();
         }
-       
         public async Task<T?> GetAsync(int id)
         {
-            if (typeof(T) == typeof(Product))
-            {
-                return await _dbContext.Set<Product>().Where(P=>P.Id==id).Include(P=>P.ProductBrand).Include(P=>P.ProductType).FirstOrDefaultAsync() as T;
-            }
             return await _dbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T> spec)
+        {
+           return await SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>() , spec).AsNoTracking().ToListAsync();
+        }
+        public async Task<T?> GetSpecAsync(ISpecification<T> spec)
+        {
+            return await SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>() , spec).FirstOrDefaultAsync();
         }
     }
 }
