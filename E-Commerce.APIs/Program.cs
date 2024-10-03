@@ -1,3 +1,5 @@
+using AutoMapper;
+using E_Commerce.APIs.Profiles;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Repository.Data;
 using E_Commerce.Repository.Repositories;
@@ -23,6 +25,9 @@ namespace E_Commerce.APIs
             });
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            builder.Services.AddAutoMapper(typeof(mappingProfile));
+
             var app = builder.Build();
 
            using var Scope = app.Services.CreateScope();

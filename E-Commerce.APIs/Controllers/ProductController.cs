@@ -1,4 +1,6 @@
-﻿using E_Commerce.Core.Entities;
+﻿using AutoMapper;
+using E_Commerce.APIs.Dtos;
+using E_Commerce.Core.Entities;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Core.Specifications.Specification.Classes;
 using E_Commerce.Repository.Repositories;
@@ -12,22 +14,24 @@ namespace E_Commerce.APIs.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IGenericRepository<Product> _productRepo;
+        private readonly IMapper _mapper;
 
-        public ProductController(IGenericRepository<Product> productRepo)
+        public ProductController(IGenericRepository<Product> productRepo , IMapper mapper)
         {
             _productRepo = productRepo;
+           _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductsAsync()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsAsync()
         {
             var spec = new ProductBrandCategorySpecification();
             var products = await _productRepo.GetAllWithSpecAsync(spec);
-            return Ok(products);
+            return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable < ProductDto>>(products));
         }
  
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductAsync(int id)
+        public async Task<ActionResult<ProductDto>> GetProductAsync(int id)
         {
             var spec = new ProductBrandCategorySpecification(id);
             var product = await _productRepo.GetSpecAsync(spec);
@@ -35,7 +39,7 @@ namespace E_Commerce.APIs.Controllers
             {
                 return NotFound(new { Message = "Not Found", StatusCode = 404 });
             }
-            return Ok(product);
+            return Ok(_mapper.Map<Product , ProductDto>(product));
         }
     }
 }
