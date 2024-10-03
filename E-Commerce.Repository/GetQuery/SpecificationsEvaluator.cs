@@ -1,5 +1,5 @@
 ﻿using E_Commerce.Core.Entities;
-using E_Commerce.Core.Specifications;
+using E_Commerce.Core.Specifications.Specification.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;

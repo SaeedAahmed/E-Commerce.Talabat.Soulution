@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Core.Specifications
+namespace E_Commerce.Core.Specifications.Specification.Interfaces
 {
     public interface ISpecification<T> where T : BaseEntity
     {
-        public Expression<Func<T,bool>> Criterial { get; set; }
-        public List<Expression<Func<T , object>>> Includes { get; set; }
+        public Expression<Func<T, bool>> Criterial { get; set; }
+        public List<Expression<Func<T, object>>> Includes { get; set; }
     }
 }

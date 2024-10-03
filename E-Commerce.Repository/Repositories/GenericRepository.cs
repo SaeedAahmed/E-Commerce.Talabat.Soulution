@@ -1,6 +1,6 @@
 ﻿using E_Commerce.Core.Entities;
 using E_Commerce.Core.Repositories.Contract;
-using E_Commerce.Core.Specifications;
+using E_Commerce.Core.Specifications.Specification.Interfaces;
 using E_Commerce.Repository.Data;
 using E_Commerce.Repository.GetQuery;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +35,12 @@ namespace E_Commerce.Repository.Repositories
         }
         public async Task<T?> GetSpecAsync(ISpecification<T> spec)
         {
-            return await SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>() , spec).FirstOrDefaultAsync();
+            return await ApplaySpecification(spec).FirstOrDefaultAsync();
+        }
+
+        private IQueryable<T> ApplaySpecification(ISpecification<T> spec)
+        {
+            return SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
     }
 }
