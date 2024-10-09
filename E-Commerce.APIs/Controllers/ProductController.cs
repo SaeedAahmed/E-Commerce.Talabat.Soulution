@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using E_Commerce.APIs.Dtos;
+using E_Commerce.APIs.Errors;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Core.Specifications.Specification.Classes;
@@ -26,7 +27,7 @@ namespace E_Commerce.APIs.Controllers
         {
             var spec = new ProductBrandCategorySpecification();
             var products = await _productRepo.GetAllWithSpecAsync(spec);
-            return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable < ProductDto>>(products));
+            return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable< ProductDto>>(products));
         }
  
         
@@ -37,7 +38,7 @@ namespace E_Commerce.APIs.Controllers
             var product = await _productRepo.GetSpecAsync(spec);
             if (product == null)
             {
-                return NotFound(new { Message = "Not Found", StatusCode = 404 });
+                return NotFound(new ApiResponse(405));
             }
             return Ok(_mapper.Map<Product , ProductDto>(product));
         }
