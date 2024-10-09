@@ -1,8 +1,10 @@
 using AutoMapper;
+using E_Commerce.APIs.Errors;
 using E_Commerce.APIs.Helpers.Profiles;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Repository.Data;
 using E_Commerce.Repository.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.APIs
@@ -27,6 +29,22 @@ namespace E_Commerce.APIs
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddAutoMapper(typeof(mappingProfile));
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var error = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
+                                                                                               .SelectMany(P => P.Value.Errors)
+                                                                                               .Select(E => E.ErrorMessage)
+                                                                                               .ToArray();
+                    var response = new ApiValidationErrorResponse()
+                    {
+                        Errors = error
+                    };
+                    return new BadRequestObjectResult(response);
+                };
+            });
 
             var app = builder.Build();
 
@@ -56,10 +74,7 @@ namespace E_Commerce.APIs
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.MapControllers();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
