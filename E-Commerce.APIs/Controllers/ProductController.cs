@@ -15,12 +15,19 @@ namespace E_Commerce.APIs.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IGenericRepository<Product> _productRepo;
+        private readonly IGenericRepository<ProductBrand> _brandRepo;
+        private readonly IGenericRepository<ProductType> _typeRepo;
         private readonly IMapper _mapper;
 
-        public ProductController(IGenericRepository<Product> productRepo , IMapper mapper)
+        public ProductController(IGenericRepository<Product> productRepo
+            , IGenericRepository<ProductBrand> BrandRepo
+            , IGenericRepository<ProductType> TypeRepo
+            , IMapper mapper)
         {
             _productRepo = productRepo;
-           _mapper = mapper;
+            _brandRepo = BrandRepo;
+            _typeRepo = TypeRepo;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsAsync()
@@ -28,9 +35,7 @@ namespace E_Commerce.APIs.Controllers
             var spec = new ProductBrandCategorySpecification();
             var products = await _productRepo.GetAllWithSpecAsync(spec);
             return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable< ProductDto>>(products));
-        }
- 
-        
+        } 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProductAsync(int id)
         {
@@ -41,6 +46,18 @@ namespace E_Commerce.APIs.Controllers
                 return NotFound(new ApiResponse(405));
             }
             return Ok(_mapper.Map<Product , ProductDto>(product));
+        }
+        [HttpGet("GetBrands")]
+        public async Task<ActionResult<ProductBrand>> GetBrands()
+        {
+            var brands = await _brandRepo.GetAllAsync();
+            return Ok(brands);
+        }
+        [HttpGet("GetCategories")]
+        public async Task<ActionResult<ProductType>> GetCategories()
+        {
+            var categories = await _typeRepo.GetAllAsync();
+            return Ok(categories);
         }
     }
 }

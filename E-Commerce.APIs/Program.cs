@@ -1,6 +1,7 @@
 using AutoMapper;
 using E_Commerce.APIs.Errors;
 using E_Commerce.APIs.Helpers.Profiles;
+using E_Commerce.APIs.Middleware;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Repository.Data;
 using E_Commerce.Repository.Repositories;
@@ -65,12 +66,15 @@ namespace E_Commerce.APIs
             }
 
             // Configure the HTTP request pipeline.
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.MapControllers();
