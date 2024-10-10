@@ -16,8 +16,8 @@ namespace E_Commerce.APIs.Errors
             return statusCode switch
             {
                 400 => "A bad request , you have made",
-                404 => "Authorized, you are not",
-                405 => "Resource was not found",
+                401 => "Authorized, you are not",
+                404 => "Resource was not found",
                 500 => "Error are the path to the dark side , Error lead to anger.",
                 _ => null
             };
