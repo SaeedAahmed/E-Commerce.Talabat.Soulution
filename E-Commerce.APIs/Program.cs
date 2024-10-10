@@ -1,5 +1,6 @@
 using AutoMapper;
 using E_Commerce.APIs.Errors;
+using E_Commerce.APIs.Extensions;
 using E_Commerce.APIs.Helpers.Profiles;
 using E_Commerce.APIs.Middleware;
 using E_Commerce.Core.Repositories.Contract;
@@ -20,32 +21,13 @@ namespace E_Commerce.APIs
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerService();
             builder.Services.AddDbContext<StoreContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddAppService();
 
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            builder.Services.AddAutoMapper(typeof(mappingProfile));
-
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = (actionContext) =>
-                {
-                    var error = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
-                                                                                               .SelectMany(P => P.Value.Errors)
-                                                                                               .Select(E => E.ErrorMessage)
-                                                                                               .ToArray();
-                    var response = new ApiValidationErrorResponse()
-                    {
-                        Errors = error
-                    };
-                    return new BadRequestObjectResult(response);
-                };
-            });
 
             var app = builder.Build();
 

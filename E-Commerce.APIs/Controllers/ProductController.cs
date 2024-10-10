@@ -35,7 +35,9 @@ namespace E_Commerce.APIs.Controllers
             var spec = new ProductBrandCategorySpecification();
             var products = await _productRepo.GetAllWithSpecAsync(spec);
             return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable< ProductDto>>(products));
-        } 
+        }
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(typeof(ApiResponse), 404)]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProductAsync(int id)
         {
