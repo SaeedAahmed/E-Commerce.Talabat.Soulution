@@ -20,8 +20,19 @@ namespace E_Commerce.Repository.GetQuery
             {
                 query = query.Where(spec.Criterial);//_dbContext.Set<Product>().Where(P=>P.Id==id)
             }
+            if(spec.OrderBy is not null)
+            {
+                query = query.OrderBy(spec.OrderBy);//_dbContext.Set<Product>().Where(P=>P.Id==id).OrderBy(P=>P.price)
+            }
+            else if (spec.OrderByDesc is not null)
+            {
+                query = query.OrderByDescending(spec.OrderByDesc);//_dbContext.Set<Product>().Where(P=>P.Id==id).OrderByDesc(P=>P.price)
+            }
 
-         query= spec.Includes.Aggregate(query,(CurrentQuery , includeExpression) => CurrentQuery.Include(includeExpression));
+            if(spec.IsPaginationEnabled)
+                query = query.Skip(spec.Skip).Take(spec.Take);
+
+            query = spec.Includes.Aggregate(query,(CurrentQuery , includeExpression) => CurrentQuery.Include(includeExpression));
                                        //_dbContext.Set<Product>().Include(P => P.ProductBrand).Include(P => P.ProductType)
             return query;
         }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using E_Commerce.APIs.Dtos;
 using E_Commerce.APIs.Errors;
+using E_Commerce.APIs.Helpers.Paginations;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Core.Specifications.Specification.Classes;
@@ -30,12 +31,17 @@ namespace E_Commerce.APIs.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsAsync()
+        public async Task<ActionResult<IReadOnlyList<Pagination<ProductDto>>>>GetProductsAsync([FromQuery] ProductSpecificationParameters productParameters)
         {
-            var spec = new ProductBrandCategorySpecification();
+            var spec = new ProductBrandCategorySpecification(productParameters);
             var products = await _productRepo.GetAllWithSpecAsync(spec);
-            return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable< ProductDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(products);
+            var countAsync = new ProductCountForSpecification(productParameters);
+            var count = await _productRepo.GetCountAsync(countAsync);
+            return Ok(new Pagination<ProductDto>(productParameters.PageIndex , productParameters.PageSize ,count, data));
         }
+
+
         [ProducesResponseType(typeof(ProductDto), 200)]
         [ProducesResponseType(typeof(ApiResponse), 404)]
         [HttpGet("{id}")]
