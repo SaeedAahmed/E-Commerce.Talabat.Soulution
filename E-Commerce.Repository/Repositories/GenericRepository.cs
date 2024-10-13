@@ -20,7 +20,7 @@ namespace E_Commerce.Repository.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await _dbContext.Set<T>().ToListAsync();
         }
@@ -29,18 +29,25 @@ namespace E_Commerce.Repository.Repositories
             return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
         {
-           return await SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>() , spec).AsNoTracking().ToListAsync();
+           return await ApplySpecification(spec).AsNoTracking().ToListAsync();
         }
         public async Task<T?> GetSpecAsync(ISpecification<T> spec)
         {
-            return await ApplaySpecification(spec).FirstOrDefaultAsync();
+            return await ApplySpecification(spec).FirstOrDefaultAsync();
+        }
+        public Task<int> GetCountAsync(ISpecification<T> spec)
+        {
+            return ApplySpecification(spec).CountAsync();
+
         }
 
-        private IQueryable<T> ApplaySpecification(ISpecification<T> spec)
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationsEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
+
+       
     }
 }
