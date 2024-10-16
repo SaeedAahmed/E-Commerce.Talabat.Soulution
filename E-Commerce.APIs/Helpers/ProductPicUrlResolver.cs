@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using E_Commerce.APIs.Dtos;
-using E_Commerce.Core.Entities;
+using E_Commerce.Core.Entities.Products;
 
 namespace E_Commerce.APIs.Helpers
 {

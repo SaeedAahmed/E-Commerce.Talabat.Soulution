@@ -1,21 +1,16 @@
-﻿using E_Commerce.Core.Entities;
+﻿using E_Commerce.Core.Entities.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Core.Specifications.Specification.Classes
+namespace E_Commerce.Core.Specifications.Specification.Classes.ProductSpec
 {
     public class ProductBrandCategorySpecification : BaseSpecification<Product>
     {
         public ProductBrandCategorySpecification(ProductSpecificationParameters spec)
-            :base(
-                 P=> 
-                 (string.IsNullOrEmpty(spec.Search) || P.Name.ToLower().Contains(spec.Search.ToLower()))&&
-                 (!spec.BrandId.HasValue || P.BrandId == spec.BrandId.Value)&&
-                 (!spec.CategoryId.HasValue || P.TypeId == spec.CategoryId.Value)
-                 )
+            : base(ProductSpecificationsHelper.GetCriteria(spec))
         {
             AddInclude();
             if (!string.IsNullOrEmpty(spec.Sort))
@@ -23,28 +18,27 @@ namespace E_Commerce.Core.Specifications.Specification.Classes
                 switch (spec.Sort)
                 {
                     case "PriceAsc":
-                       AddOrderBy(P=>P.Price);
+                        AddOrderBy(P => P.Price);
                         break;
 
                     case "PriceDesc":
-                        AddOrderByDesc(P=>P.Price);
-                         break;
+                        AddOrderByDesc(P => P.Price);
+                        break;
                     default:
                         AddOrderBy(P => P.Name);
-                        break;           
+                        break;
                 }
-            } 
-            else{
+            }
+            else
+            {
                 AddOrderBy(P => P.Name);
             }
-
-            ApplyPagination((spec.PageIndex-1)*spec.PageSize, spec.PageSize);
+            ApplyPagination((spec.PageIndex - 1) * spec.PageSize, spec.PageSize);
         }
-        public ProductBrandCategorySpecification(int id) : base(P=>P.Id == id)
+        public ProductBrandCategorySpecification(int id) : base(P => P.Id == id)
         {
             AddInclude();
         }
-
         private void AddInclude()
         {
             Includes.Add(P => P.ProductBrand);

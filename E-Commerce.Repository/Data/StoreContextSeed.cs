@@ -1,4 +1,4 @@
-﻿using E_Commerce.Core.Entities;
+﻿using E_Commerce.Core.Entities.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +30,13 @@ namespace E_Commerce.Repository.Data
             if (_storeContext.ProductTypes.Count() == 0)
             {
                 var CategoryData = File.ReadAllText("../E-Commerce.Repository/Data/DataSeeding/categories.json");
-                var Category = JsonSerializer.Deserialize<List<ProductType>>(CategoryData);
+                var Category = JsonSerializer.Deserialize<List<ProductCategory>>(CategoryData);
 
                 if (Category?.Count() > 0)
                 {
                     foreach (var item in Category)
                     {
-                        _storeContext.Set<ProductType>().Add(item);
+                        _storeContext.Set<ProductCategory>().Add(item);
                     }
                     await _storeContext.SaveChangesAsync();
                 }

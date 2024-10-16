@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Core.Specifications.Specification.Classes
+namespace E_Commerce.Core.Specifications.Specification.Classes.ProductSpec
 {
     public class ProductSpecificationParameters
     {
@@ -14,12 +14,12 @@ namespace E_Commerce.Core.Specifications.Specification.Classes
         public int PageSize
         {
             get { return _PageSize; }
-            set { _PageSize = value> MaxPageSize? MaxPageSize:value; }
+            set { _PageSize = value > MaxPageSize ? MaxPageSize : value; }
         }
         public int PageIndex { get; set; } = 1;
         public string? Sort { get; set; }
         public int? BrandId { get; set; }
-        public int? CategoryId { get; set; }
+        public int? TypeId { get; set; }
         public string? Search { get; set; }
 
 

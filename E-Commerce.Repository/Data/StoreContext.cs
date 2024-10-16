@@ -1,4 +1,4 @@
-﻿using E_Commerce.Core.Entities;
+﻿using E_Commerce.Core.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,6 @@ namespace E_Commerce.Repository.Data
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
-        public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<ProductCategory> ProductTypes { get; set; }
     }
 }
