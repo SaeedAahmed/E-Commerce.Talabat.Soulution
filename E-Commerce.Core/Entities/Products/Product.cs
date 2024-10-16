@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Core.Entities
+namespace E_Commerce.Core.Entities.Products
 {
     public class Product : BaseEntity
     {
@@ -15,6 +15,6 @@ namespace E_Commerce.Core.Entities
         public int BrandId { get; set; }
         public ProductBrand ProductBrand { get; set; }
         public int TypeId { get; set; }
-        public ProductType ProductType { get; set; }
+        public ProductCategory ProductType { get; set; }
     }
 }

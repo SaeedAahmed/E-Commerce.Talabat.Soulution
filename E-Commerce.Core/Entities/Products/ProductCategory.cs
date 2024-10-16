@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace E_Commerce.Core.Entities
+namespace E_Commerce.Core.Entities.Products
 {
-    public class ProductType:BaseEntity
+    public class ProductCategory : BaseEntity
     {
         public string Name { get; set; }
     }

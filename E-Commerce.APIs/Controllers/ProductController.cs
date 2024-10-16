@@ -2,9 +2,9 @@
 using E_Commerce.APIs.Dtos;
 using E_Commerce.APIs.Errors;
 using E_Commerce.APIs.Helpers.Paginations;
-using E_Commerce.Core.Entities;
+using E_Commerce.Core.Entities.Products;
 using E_Commerce.Core.Repositories.Contract;
-using E_Commerce.Core.Specifications.Specification.Classes;
+using E_Commerce.Core.Specifications.Specification.Classes.ProductSpec;
 using E_Commerce.Repository.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +17,12 @@ namespace E_Commerce.APIs.Controllers
     {
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IGenericRepository<ProductBrand> _brandRepo;
-        private readonly IGenericRepository<ProductType> _typeRepo;
+        private readonly IGenericRepository<ProductCategory> _typeRepo;
         private readonly IMapper _mapper;
 
         public ProductController(IGenericRepository<Product> productRepo
             , IGenericRepository<ProductBrand> BrandRepo
-            , IGenericRepository<ProductType> TypeRepo
+            , IGenericRepository<ProductCategory> TypeRepo
             , IMapper mapper)
         {
             _productRepo = productRepo;
@@ -62,7 +62,7 @@ namespace E_Commerce.APIs.Controllers
             return Ok(brands);
         }
         [HttpGet("GetCategories")]
-        public async Task<ActionResult<ProductType>> GetCategories()
+        public async Task<ActionResult<ProductCategory>> GetCategories()
         {
             var categories = await _typeRepo.GetAllAsync();
             return Ok(categories);

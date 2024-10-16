@@ -13,6 +13,7 @@ namespace E_Commerce.APIs.Extensions
         public static IServiceCollection AddAppService(this IServiceCollection services)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
             services.AddAutoMapper(typeof(mappingProfile));
             services.Configure<ApiBehaviorOptions>(options =>
             {
