@@ -14,7 +14,11 @@ namespace E_Commerce.Core.Repositories.Contract
         Task<IReadOnlyList<T>> GetAllAsync();
         Task<T?> GetSpecAsync(ISpecification<T> spec);
         Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
-        Task<int> GetCountAsync(ISpecification<T> spec); 
+        Task<int> GetCountAsync(ISpecification<T> spec);
+        
+        Task Add (T entity);
+        void Update (T entity);
+        void Delete (T entity);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using E_Commerce.Core.Entities.Products;
+﻿using E_Commerce.Core.Entities.Order_Aggregate;
+using E_Commerce.Core.Entities.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,21 @@ namespace E_Commerce.Repository.Data
                     foreach (var item in product)
                     {
                         _storeContext.Set<Product>().Add(item);
+                    }
+                    await _storeContext.SaveChangesAsync();
+                }
+            }
+
+            if (_storeContext.DeliveryMethods.Count() == 0)
+            {
+                var deliveryMethod = File.ReadAllText("../E-Commerce.Repository/Data/DataSeeding/delivery.json");
+                var delivery = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryMethod);
+
+                if (delivery?.Count() > 0)
+                {
+                    foreach (var item in delivery)
+                    {
+                        _storeContext.Set<DeliveryMethod>().Add(item);
                     }
                     await _storeContext.SaveChangesAsync();
                 }

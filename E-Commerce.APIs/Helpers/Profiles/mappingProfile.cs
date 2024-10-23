@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using E_Commerce.APIs.Dtos;
 using E_Commerce.Core.Entities.Basket;
+using E_Commerce.Core.Entities.Identity;
 using E_Commerce.Core.Entities.Products;
 
 namespace E_Commerce.APIs.Helpers
@@ -17,6 +18,7 @@ namespace E_Commerce.APIs.Helpers
 
             CreateMap<CustomerBasketDto, CustomerBasket>();
             CreateMap<BasketItemsDto, BasketItems>();
+            CreateMap<AddressDto, Address>();
         }
     }
 }
