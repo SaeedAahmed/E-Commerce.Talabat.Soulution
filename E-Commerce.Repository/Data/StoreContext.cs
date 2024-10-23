@@ -1,4 +1,5 @@
-﻿using E_Commerce.Core.Entities.Products;
+﻿using E_Commerce.Core.Entities.Order_Aggregate;
+using E_Commerce.Core.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,9 @@ namespace E_Commerce.Repository.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
         public DbSet<ProductCategory> ProductTypes { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItems> OrderItems { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
     }
 }
