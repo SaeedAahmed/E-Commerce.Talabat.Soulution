@@ -41,7 +41,7 @@ namespace E_Commerce.APIs
                 return ConnectionMultiplexer.Connect(connection);
             });
             builder.Services.AddAppService();
-            builder.Services.IdentityServices();
+            builder.Services.IdentityServices(builder.Configuration);
             builder.Services.AddAuthentication();
 
             var app = builder.Build();
@@ -80,11 +80,13 @@ namespace E_Commerce.APIs
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseStaticFiles();
             app.MapControllers();
-            app.UseAuthorization();
-            app.MapControllers();
+        
 
+            
             app.Run();
         }
     }

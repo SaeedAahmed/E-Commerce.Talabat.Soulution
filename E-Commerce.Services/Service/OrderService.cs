@@ -2,6 +2,7 @@
 using E_Commerce.Core.Entities.Products;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Core.Services.Contract;
+using E_Commerce.Core.Specifications.Specification.Classes.OrderSpec;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,14 +57,18 @@ namespace E_Commerce.Services.Service
 
         }
 
-        public Task<Order> GetOrderByIdForUserAsync(int orderId, string buyerEmail)
+        public async Task<Order> GetOrderByIdForUserAsync(int id, string buyerEmail)
         {
-            throw new NotImplementedException();
+            var spec = new OrderSpecification(buyerEmail, id);
+            var order = await _unitOfWork.Repository<Order>().GetSpecAsync(spec);
+            return order;
         }
 
-        public Task<IReadOnlyList<Order>> GetOrderForUserAsync(string buyerEmail)
+        public async Task<IReadOnlyList<Order>> GetOrderForUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var Spec = new OrderSpecification(buyerEmail);
+            var order = await _unitOfWork.Repository<Order>().GetAllWithSpecAsync(Spec);
+            return order;
         }
     }
 }

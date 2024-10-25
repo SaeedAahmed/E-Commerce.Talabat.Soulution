@@ -18,6 +18,7 @@ namespace E_Commerce.APIs.Helpers
 
             CreateMap<CustomerBasketDto, CustomerBasket>();
             CreateMap<BasketItemsDto, BasketItems>();
+            CreateMap<E_Commerce.Core.Entities.Identity.Address, E_Commerce.APIs.Dtos.AddressDto>();
             CreateMap<E_Commerce.APIs.Dtos.AddressDto, E_Commerce.Core.Entities.Order_Aggregate.Address>();
 
         }
