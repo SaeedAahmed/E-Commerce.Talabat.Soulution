@@ -6,6 +6,7 @@ using E_Commerce.Core.Entities.Products;
 using E_Commerce.Core.Repositories.Contract;
 using E_Commerce.Core.Specifications.Specification.Classes.ProductSpec;
 using E_Commerce.Repository.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,29 +16,24 @@ namespace E_Commerce.APIs.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IGenericRepository<Product> _productRepo;
-        private readonly IGenericRepository<ProductBrand> _brandRepo;
-        private readonly IGenericRepository<ProductCategory> _typeRepo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProductController(IGenericRepository<Product> productRepo
-            , IGenericRepository<ProductBrand> BrandRepo
-            , IGenericRepository<ProductCategory> TypeRepo
+        public ProductController(IUnitOfWork unitOfWork
             , IMapper mapper)
         {
-            _productRepo = productRepo;
-            _brandRepo = BrandRepo;
-            _typeRepo = TypeRepo;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Pagination<ProductDto>>>>GetProductsAsync([FromQuery] ProductSpecificationParameters productParameters)
         {
             var spec = new ProductBrandCategorySpecification(productParameters);
-            var products = await _productRepo.GetAllWithSpecAsync(spec);
+            var products = await _unitOfWork.Repository<Product>().GetAllWithSpecAsync(spec);
             var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(products);
             var countAsync = new ProductCountForSpecification(productParameters);
-            var count = await _productRepo.GetCountAsync(countAsync);
+            var count = await _unitOfWork.Repository<Product>().GetCountAsync(countAsync);
             return Ok(new Pagination<ProductDto>(productParameters.PageIndex , productParameters.PageSize ,count, data));
         }
 
@@ -48,7 +44,7 @@ namespace E_Commerce.APIs.Controllers
         public async Task<ActionResult<ProductDto>> GetProductAsync(int id)
         {
             var spec = new ProductBrandCategorySpecification(id);
-            var product = await _productRepo.GetSpecAsync(spec);
+            var product = await _unitOfWork.Repository<Product>().GetSpecAsync(spec);
             if (product == null)
             {
                 return NotFound(new ApiResponse(405));
@@ -58,13 +54,13 @@ namespace E_Commerce.APIs.Controllers
         [HttpGet("GetBrands")]
         public async Task<ActionResult<ProductBrand>> GetBrands()
         {
-            var brands = await _brandRepo.GetAllAsync();
+            var brands = await _unitOfWork.Repository<ProductBrand>().GetAllAsync();
             return Ok(brands);
         }
         [HttpGet("GetCategories")]
         public async Task<ActionResult<ProductCategory>> GetCategories()
         {
-            var categories = await _typeRepo.GetAllAsync();
+            var categories = await _unitOfWork.Repository<ProductCategory>().GetAllAsync();
             return Ok(categories);
         }
     }
