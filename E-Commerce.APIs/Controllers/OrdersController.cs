@@ -24,7 +24,7 @@ namespace E_Commerce.APIs.Controllers
         }
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder([FromQuery] OrderDto orderDto)
+        public async Task<ActionResult<OrderToReturnOrderDto>> CreateOrder([FromQuery] OrderDto orderDto)
         {
             var address = _mapper.Map<AddressDto, E_Commerce.Core.Entities.Order_Aggregate.Address>(orderDto.ShippingAddress);
             var Order = await _orderServices.CreateOrderAsync(orderDto.BuyerEmail,
@@ -32,24 +32,24 @@ namespace E_Commerce.APIs.Controllers
                 orderDto.DeliveryMethodId,
                 address);
             if (Order is null) return BadRequest(new ApiResponse(400));
-            return Ok(Order);
+            return Ok(_mapper.Map<Order,OrderToReturnOrderDto>(Order));
         }
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Order>>> GetOrderFromUser()
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnOrderDto>>> GetOrderFromUser()
         {
             var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
             var orders = await _orderServices.GetOrderForUserAsync(buyerEmail);
-            return Ok(orders);
+            return Ok(_mapper.Map<IReadOnlyList<Order>,IReadOnlyList<OrderToReturnOrderDto>>(orders));
         }
         [Authorize]
         [HttpGet("id")]
-        public async Task<ActionResult<Order>> GetOrderByIdFromUser(int id)
+        public async Task<ActionResult<OrderToReturnOrderDto>> GetOrderByIdFromUser(int id)
         {
             var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
             var orders = await _orderServices.GetOrderByIdForUserAsync(id , buyerEmail);
             if(orders is null) return NotFound(new ApiResponse(404));
-            return Ok(orders);
+            return Ok(_mapper.Map<Order, OrderToReturnOrderDto>(orders));
         }
     }
 }

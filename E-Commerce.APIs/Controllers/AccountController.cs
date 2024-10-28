@@ -77,7 +77,7 @@ namespace E_Commerce.APIs.Controllers
             {
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                Token = "This will be token"
+                Token = await _tokenServices.CreateTokenAsync(user, _userManager)
             });
         }
         [Authorize]
