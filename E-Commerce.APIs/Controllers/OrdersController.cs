@@ -51,5 +51,13 @@ namespace E_Commerce.APIs.Controllers
             if(orders is null) return NotFound(new ApiResponse(404));
             return Ok(_mapper.Map<Order, OrderToReturnOrderDto>(orders));
         }
+
+        [Authorize]
+        [HttpGet("deliveryMethod")]
+        public async Task<ActionResult<OrderToReturnOrderDto>> GetDeliveryMethod()
+        {
+            var deliveryMethod = await _orderServices.GetDeliveryMethodsAsync();
+            return Ok(deliveryMethod);
+        }
     }
 }

@@ -57,6 +57,12 @@ namespace E_Commerce.Services.Service
 
         }
 
+        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+        {
+            var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetAllAsync();
+            return deliveryMethod;
+        }
+
         public async Task<Order> GetOrderByIdForUserAsync(int id, string buyerEmail)
         {
             var spec = new OrderSpecification(buyerEmail, id);
