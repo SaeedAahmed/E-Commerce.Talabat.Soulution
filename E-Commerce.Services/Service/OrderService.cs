@@ -15,11 +15,13 @@ namespace E_Commerce.Services.Service
     {
         private readonly IBasketRepository _basketRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPaymentServices _paymentServices;
 
-        public OrderService(IBasketRepository basketRepo,IUnitOfWork unitOfWork)
+        public OrderService(IBasketRepository basketRepo,IUnitOfWork unitOfWork , IPaymentServices paymentServices)
         {
             _basketRepo = basketRepo;
             _unitOfWork = unitOfWork;
+            _paymentServices = paymentServices;
         }
         public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
         {
@@ -46,7 +48,15 @@ namespace E_Commerce.Services.Service
             var deliveryMethods = await _unitOfWork.Repository<DeliveryMethod>().GetAsync(deliveryMethodId);
 
             // Create Order
-            var order = new Order(buyerEmail , shippingAddress , deliveryMethods , orderItems , subTotal);
+            var spec = new OrderWithPaymentIntentIdSpec(basket.PaymentId);
+            var existingOrder = await _unitOfWork.Repository<Order>().GetEntityWithSpecAsync(spec);
+            if(existingOrder is not null)
+            {
+                _unitOfWork.Repository<Order>().Delete(existingOrder);
+                await _paymentServices.CreateOrUpdateIntent(basket.Id);
+            }
+
+            var order = new Order(buyerEmail , shippingAddress , deliveryMethods ,basket.PaymentId , orderItems , subTotal );
 
             await _unitOfWork.Repository<Order>().Add(order);
 
@@ -66,7 +76,7 @@ namespace E_Commerce.Services.Service
         public async Task<Order> GetOrderByIdForUserAsync(int id, string buyerEmail)
         {
             var spec = new OrderSpecification(buyerEmail, id);
-            var order = await _unitOfWork.Repository<Order>().GetSpecAsync(spec);
+            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpecAsync(spec);
             return order;
         }
 

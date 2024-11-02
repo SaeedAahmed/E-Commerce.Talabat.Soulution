@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using E_Commerce.APIs.Dtos;
 using E_Commerce.APIs.Errors;
+using E_Commerce.APIs.Helpers;
 using E_Commerce.APIs.Helpers.Paginations;
 using E_Commerce.Core.Entities.Products;
 using E_Commerce.Core.Repositories.Contract;
@@ -25,7 +26,7 @@ namespace E_Commerce.APIs.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        
+        [Cached(600)]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Pagination<ProductDto>>>>GetProductsAsync([FromQuery] ProductSpecificationParameters productParameters)
         {
@@ -44,7 +45,7 @@ namespace E_Commerce.APIs.Controllers
         public async Task<ActionResult<ProductDto>> GetProductAsync(int id)
         {
             var spec = new ProductBrandCategorySpecification(id);
-            var product = await _unitOfWork.Repository<Product>().GetSpecAsync(spec);
+            var product = await _unitOfWork.Repository<Product>().GetEntityWithSpecAsync(spec);
             if (product == null)
             {
                 return NotFound(new ApiResponse(405));

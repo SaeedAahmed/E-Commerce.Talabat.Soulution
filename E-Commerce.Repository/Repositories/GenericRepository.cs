@@ -33,7 +33,7 @@ namespace E_Commerce.Repository.Repositories
         {
            return await ApplySpecification(spec).AsNoTracking().ToListAsync();
         }
-        public async Task<T?> GetSpecAsync(ISpecification<T> spec)
+        public async Task<T?> GetEntityWithSpecAsync(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }

@@ -14,9 +14,10 @@ namespace E_Commerce.APIs.Extensions
     {
         public static IServiceCollection AddAppService(this IServiceCollection services)
         {
-
+            services.AddSingleton<IResponseCacheService , ResponseCachingService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IOrderService), typeof(OrderService));
+            services.AddScoped<IPaymentServices , PaymentService>();
             // services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
             services.AddAutoMapper(typeof(mappingProfile));
