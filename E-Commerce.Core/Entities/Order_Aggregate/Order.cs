@@ -15,12 +15,14 @@ namespace E_Commerce.Core.Entities.Order_Aggregate
         public Order(string buyerEmail ,
             Address shippingAddress , 
             DeliveryMethod deliveryMethod, 
+            string paymentIntentId,
             ICollection<OrderItems> items, 
             decimal subTotal)
         {
             BuyerEmail = buyerEmail;
             ShippingAddress= shippingAddress;
             DeliveryMethod= deliveryMethod;
+            PaymentIntentId= paymentIntentId;
             Items= items;
             SubTotal= subTotal;
         }
@@ -33,6 +35,6 @@ namespace E_Commerce.Core.Entities.Order_Aggregate
         public decimal SubTotal { get; set; }
         public decimal Total()
             => DeliveryMethod.Cost + SubTotal;
-        public string PaymentIntentId { get; set; } = string.Empty;
+        public string PaymentIntentId { get; set; }
     }
 }
